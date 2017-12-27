@@ -1,0 +1,19 @@
+{
+  "name": "voto-y-lealtad",
+  "version": "1.0.0",
+  "description": "¿Quienes fueron los Diputados oficialistas mas leales a los proyectos de ley del Ejecutivo (2014-2018)?",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/felipeares/voto-y-lealtad.git"
+  },
+  "author": "felipeares",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/felipeares/voto-y-lealtad/issues"
+  },
+  "homepage": "https://github.com/felipeares/voto-y-lealtad#readme"
+}

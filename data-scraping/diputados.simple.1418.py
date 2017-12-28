@@ -35,7 +35,7 @@ try:
     content = browser.find_elements_by_css_selector('li.alturaDiputado h4 a')
     for el in content:
         data.append({
-                "prmid":scraperhelper.getQueryParametersFromUrl(el.get_attribute('href')),
+                "prmid":scraperhelper.getQueryParametersFromUrl(el.get_attribute('href'))[0],
                 "nombre":str(el.text.replace('SR. ','').replace('SRA. ','')),
                 "periodo":"2014-2018"
         })

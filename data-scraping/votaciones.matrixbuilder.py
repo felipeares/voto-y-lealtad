@@ -72,11 +72,13 @@ for votacion in votaciones_raw['data']:
                  votacion['quorum'],
                  votacion['resultado']]   
         
-        vector_favor = crearVectorDeDiputados(votacion['favor'], 10)
-        vector_contra = crearVectorDeDiputados(votacion['contra'], -10)
-        vector_abstencion = crearVectorDeDiputados(votacion['abstencion'], -5)
+        vector_favor = crearVectorDeDiputados(votacion['favor'], 1)
+        vector_contra = crearVectorDeDiputados(votacion['contra'], 2)
+        vector_abstencion = crearVectorDeDiputados(votacion['abstencion'], 3)
+        vector_pareo = crearVectorDeDiputados(votacion['pareos'], 4)
+        vector_articulo_quinto = crearVectorDeDiputados(votacion['articulo_quinto'], 5)
         
-        vector_final = [f + c + a for f, c, a in zip(vector_favor, vector_contra, vector_abstencion)]
+        vector_final = [max(f, c, a, p, q) for f, c, a, p, q in zip(vector_favor, vector_contra, vector_abstencion, vector_pareo, vector_articulo_quinto)]
         
         votaciones_mensajes.append(votos + vector_final)
         
@@ -100,7 +102,7 @@ for diputado in diputados_raw['data']:
 diputados_df = pd.DataFrame(info_diputados, columns=['prmid','nombre','periodo','comite_parlamentario'])
 
 # Guardar a CSV
-votaciones_mensajes_df.to_csv('../data-analytics/data/votaciones.mensajes.csv', index = False, encoding='utf-8-sig')
+votaciones_mensajes_df.to_csv('../data-analytics/data/votaciones.mensajes.texto.csv', index = False, encoding='utf-8-sig')
 diputados_df.to_csv('../data-analytics/data/diputados.csv', index = False, encoding='utf-8-sig')
 
 

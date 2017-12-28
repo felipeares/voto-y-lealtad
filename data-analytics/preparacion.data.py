@@ -8,8 +8,10 @@ diputados_raw = json.load(open('../data-scraping/data/diputados.extended.1418.js
 
 # Cargar Matriz CSV
 matrix_votos = pd.read_csv('./data/votaciones.mensajes.texto.csv')
-num_votaciones = matrix_votos['boletin'].count()
-num_votaciones_tr01 = matrix_votos['tramite'][matrix_votos['tramite'] == 'PRIMER TRÁMITE / PRIMER INFORME'].count()
+num_votaciones = {
+    'total': matrix_votos['boletin'].count(),
+    'total_tr01': matrix_votos['tramite'][matrix_votos['tramite'] == 'PRIMER TRÁMITE / PRIMER INFORME'].count()
+}
 
 # Tipos de Trámites
 tipos_tramites = list(matrix_votos['tramite'].astype('category').cat.categories)
@@ -36,9 +38,9 @@ diputados_info_matrix = []
 def calcularLealtad(rep, tramite = '', con_asistencia = False):
     global num_votaciones
     if con_asistencia:
-        return round((rep['favor' + tramite]/ (num_votaciones - rep['ausencia' + tramite])), 2)
+        return round((rep['favor' + tramite]/ (num_votaciones['total' + tramite] - rep['ausencia' + tramite])), 2)
     else:
-        return round((rep['favor' + tramite]/ (num_votaciones)), 2)
+        return round((rep['favor' + tramite]/ (num_votaciones['total' + tramite])), 2)
 
 for diputado in diputados_raw['data']:
     rep = {
@@ -66,11 +68,11 @@ for diputado in diputados_raw['data']:
         
     }
     
-    rep['ausencia'] = int(num_votaciones - rep['favor'] - rep['contra'] - rep['abstencion'] - rep['pareo'] - rep['articulo_quinto'])
+    rep['ausencia'] = int(num_votaciones['total'] - rep['favor'] - rep['contra'] - rep['abstencion'] - rep['pareo'] - rep['articulo_quinto'])
     rep['lealtad'] = calcularLealtad(rep)
     rep['lealtad_con_asistencia'] = calcularLealtad(rep, con_asistencia = True)
     
-    rep['ausencia_tr01'] = int(num_votaciones_tr01 - rep['favor_tr01'] - rep['contra_tr01'] - rep['abstencion_tr01'] - rep['pareo_tr01'] - rep['articulo_quinto_tr01'])
+    rep['ausencia_tr01'] = int(num_votaciones['total_tr01'] - rep['favor_tr01'] - rep['contra_tr01'] - rep['abstencion_tr01'] - rep['pareo_tr01'] - rep['articulo_quinto_tr01'])
     
     diputados_info.append(rep)
     rep['lealtad_tr01'] = calcularLealtad(rep, tramite = '_tr01')

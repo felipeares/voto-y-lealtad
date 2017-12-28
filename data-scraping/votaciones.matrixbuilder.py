@@ -1,13 +1,12 @@
 # Importar librerías a utilizar
 import numpy as np
 import pandas as pd
-from datetime import datetime
 import json
 
 # Cargar json con todas las sesiones
 sesiones_raw = json.load(open('./data/sesiones.extended.1418.json'))
 votaciones_raw = json.load(open('./data/votaciones.extended.1418.json'))
-diputados_raw = json.load(open('./data/diputados.simple.1418.json'))
+diputados_raw = json.load(open('./data/diputados.extended.1418.json'))
 
 # Construir mapeo de id de diputados a número del 0-119
 diputados_dict = {}
@@ -66,8 +65,8 @@ for votacion in votaciones_raw['data']:
     if votacion['boletin'][3:] in boletines_mensajes_num:
         votos = [votacion['boletin'][3:], 
                  votacion['fecha'], 
-                 votacion['materia'], 
-                 votacion['articulo'], 
+                 votacion['materia'].replace(',',''), 
+                 votacion['articulo'].replace(',',''), 
                  votacion['sesion'], 
                  votacion['tramite'],
                  votacion['quorum'],
@@ -91,7 +90,17 @@ votaciones_mensajes_df = pd.DataFrame(votaciones_mensajes, columns=(['boletin',
                                                                     'quorum',
                                                                     'resultado']+columnas_diputados))
 
+# Iniciar Matriz con info de Diputados
+info_diputados = []
+
+for diputado in diputados_raw['data']:
+    info_diputados.append([diputado['prmid'], diputado['nombre'], diputado['periodo'], diputado['comite_parlamentario']])
+
+# Crear dataframe diputados
+diputados_df = pd.DataFrame(info_diputados, columns=['prmid','nombre','periodo','comite_parlamentario'])
+
 # Guardar a CSV
-votaciones_mensajes_df.to_csv('../data-analytics/data/votaciones.mensajes.csv', index = False)
+votaciones_mensajes_df.to_csv('../data-analytics/data/votaciones.mensajes.csv', index = False, encoding='utf-8-sig')
+diputados_df.to_csv('../data-analytics/data/diputados.csv', index = False, encoding='utf-8-sig')
 
 

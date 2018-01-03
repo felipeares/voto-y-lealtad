@@ -1,0 +1,159 @@
+body {
+	background-color: #ffffff;
+	background-image: url("../images/gplay.png");
+	text-align:center;
+}		
+textPath.nombrespartidos {
+	font: 8px Verdana, Helvetica, Arial, sans-serif;
+	text-transform: uppercase;
+}
+
+image.diputado {
+	border: solid 2px #FFF;
+	border-radius: 20px;
+}
+
+
+#tooltip {
+    position: absolute;
+    width: 300px;
+    height: auto;
+    padding: 10px;
+    background-color: white;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+	z-index: 1000;
+}
+
+#tooltip.hidden {
+	display: none;
+}
+
+#tooltip-left {
+	float:left;
+	width:100px;
+}
+
+#tooltip-right {
+	float:right;
+	width:180px;
+	padding-left: 10px;
+}
+
+#tooltip-image {
+	width: 100%;
+}
+
+#tooltip-nombre {
+	font-size: 16px;
+	text-align: left;
+	margin: 0px;
+}
+
+#tooltip-partido {
+	font-size:12px;
+	color: #CCC;
+	text-align: left;
+	margin: 8px 0px;
+	font-weight: 100;
+}
+
+#value {
+	margin: 0;
+	text-align: left;
+	font-size: 12px;
+	color: #333;
+}
+
+#buttons-container {
+	width:100%;
+}
+
+#buttons-container .nav-item {
+	border-right: 1px solid #DDD;
+}
+#buttons-container .nav-item:last-child {
+	border-right: none;
+}
+#buttons-container .nav-item .nav-link {
+	border-radius: 0px;
+	color: #5bc0de;
+}
+#buttons-container .nav-item .nav-link.active {
+	background-color: #eceeef;
+	color: #292b2c;
+	font-weight: 300;
+}
+#pos-container {
+	width:100%;
+	height:3px;
+	background: #EFEFEF;
+}
+#pos {
+	position: relative;
+	width: 25%;
+	height:3px;
+	background:#f0ad4e;
+	left:0%;
+}
+#expl-container {
+	text-align: left;
+	padding-top:20px;
+	margin-bottom:5px;
+}
+#expl-container h1 {
+	font-size:20px;
+}
+#expl-container p {
+	font-size:14px;
+}
+#main-container {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.shadowers {
+	background:#FFF;
+	-webkit-box-shadow: 1px 1px 11px 1px rgba(0,0,0,0.35);
+	-moz-box-shadow: 1px 1px 11px 1px rgba(0,0,0,0.35);
+	box-shadow: 1px 1px 11px 1px rgba(0,0,0,0.35);
+}
+#intro {
+	text-align: left;
+}
+#intro h1 {
+	font-size: 48px;
+}
+
+#felipe-info {
+	padding-left: 0px;
+	text-align: left;
+}
+#contactoModal {
+	text-align: left;
+}
+
+#felipe-info li {
+	list-style: none;
+}
+
+#felipe-info li i {
+	font-size: 34px;
+	color: #000;
+}
+
+#felipe-info li a {
+	color: #555;
+    position: relative;
+    top: -7px;
+	left: 5px;
+	font-weight:100;
+}
+.btn-outline-info.focus, .btn-outline-info:focus {
+    color:#5bc0de;
+	box-shadow: none;
+}

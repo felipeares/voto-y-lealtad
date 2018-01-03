@@ -10,7 +10,8 @@ diputados_raw = json.load(open('../data-scraping/data/diputados.extended.1418.js
 matrix_votos = pd.read_csv('./data/votaciones.mensajes.texto.csv')
 num_votaciones = {
     'total': matrix_votos['boletin'].count(),
-    'total_tr01': matrix_votos['tramite'][matrix_votos['tramite'] == 'PRIMER TRÁMITE / PRIMER INFORME'].count()
+    'total_tr01': matrix_votos['tramite'][matrix_votos['tramite'] == 'PRIMER TRÁMITE / PRIMER INFORME'].count(),
+    'total_rec': matrix_votos['tramite'][matrix_votos['resultado'] == 'RECHAZADO'].count()
 }
 
 # Tipos de Trámites
@@ -48,6 +49,7 @@ for diputado in diputados_raw['data']:
         'prmid': diputado['prmid'],
         'nombre': diputado['nombre'],
         'comite_parlamentario': diputado['comite_parlamentario'],
+        
         'favor': int(matrix_votos[diputado['nombre']][matrix_votos[diputado['nombre']] == 1].count()),
         'contra': int(matrix_votos[diputado['nombre']][matrix_votos[diputado['nombre']] == 2].count()),
         'abstencion': int(matrix_votos[diputado['nombre']][matrix_votos[diputado['nombre']] == 3].count()),
@@ -65,7 +67,17 @@ for diputado in diputados_raw['data']:
         'articulo_quinto_tr01': int(matrix_votos[diputado['nombre']][(matrix_votos[diputado['nombre']] == 5) & (matrix_votos['tramite'] == 'PRIMER TRÁMITE / PRIMER INFORME')].count()),
         'ausencia_tr01': 0,
         'lealtad_tr01': 0,
-        'lealtad_con_asistencia_tr01': 0
+        'lealtad_con_asistencia_tr01': 0,
+        
+        'favor_rec': int(matrix_votos[diputado['nombre']][(matrix_votos[diputado['nombre']] == 1) & (matrix_votos['resultado'] == 'RECHAZADO')].count()),
+        'contra_rec': int(matrix_votos[diputado['nombre']][(matrix_votos[diputado['nombre']] == 2) & (matrix_votos['resultado'] == 'RECHAZADO')].count()),
+        'abstencion_rec': int(matrix_votos[diputado['nombre']][(matrix_votos[diputado['nombre']] == 3) & (matrix_votos['resultado'] == 'RECHAZADO')].count()),
+        'pareo_rec': int(matrix_votos[diputado['nombre']][(matrix_votos[diputado['nombre']] == 4) & (matrix_votos['resultado'] == 'RECHAZADO')].count()),
+        'articulo_quinto_rec': int(matrix_votos[diputado['nombre']][(matrix_votos[diputado['nombre']] == 5) & (matrix_votos['resultado'] == 'RECHAZADO')].count()),
+        'ausencia_rec': 0,
+        'lealtad_rec': 0,
+        'lealtad_con_asistencia_rec': 0
+        
         
     }
     
@@ -74,11 +86,14 @@ for diputado in diputados_raw['data']:
     rep['lealtad_con_asistencia'] = calcularLealtad(rep, con_asistencia = True)
     
     rep['ausencia_tr01'] = int(num_votaciones['total_tr01'] - rep['favor_tr01'] - rep['contra_tr01'] - rep['abstencion_tr01'] - rep['pareo_tr01'] - rep['articulo_quinto_tr01'])
-    
-    diputados_info.append(rep)
     rep['lealtad_tr01'] = calcularLealtad(rep, tramite = '_tr01')
     rep['lealtad_con_asistencia_tr01'] = calcularLealtad(rep, tramite = '_tr01', con_asistencia = True)
     
+    rep['ausencia_rec'] = int(num_votaciones['total_rec'] - rep['favor_rec'] - rep['contra_rec'] - rep['abstencion_rec'] - rep['pareo_rec'] - rep['articulo_quinto_rec'])
+    rep['lealtad_rec'] = calcularLealtad(rep, tramite = '_rec')
+    rep['lealtad_con_asistencia_rec'] = calcularLealtad(rep, tramite = '_rec', con_asistencia = True)
+    
+    diputados_info.append(rep)
     matrix_columnas = [k for k, v in rep.items()]
     diputados_info_matrix.append([v for k, v in rep.items()])
     

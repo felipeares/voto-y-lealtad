@@ -33,6 +33,7 @@ for x in matrix_votos_np:
 # Iniciar variable que guardará a los diputados y sus indicadores
 diputados_info = []
 diputados_info_matrix = []
+partidos_info = []
 
 # Función de cálculo de lealtad 
 def calcularLealtad(rep, tramite = '', con_asistencia = False):
@@ -80,6 +81,9 @@ for diputado in diputados_raw['data']:
     
     matrix_columnas = [k for k, v in rep.items()]
     diputados_info_matrix.append([v for k, v in rep.items()])
+    
+    if diputado['comite_parlamentario'] not in partidos_info:
+        partidos_info.append(diputado['comite_parlamentario'])
 
 # Crear dataframe con la matriz resumen
 diputados_info_df = pd.DataFrame(diputados_info_matrix, columns=matrix_columnas)
@@ -88,7 +92,11 @@ diputados_info_df = pd.DataFrame(diputados_info_matrix, columns=matrix_columnas)
 diputados_info_df = diputados_info_df.sort_values('lealtad', axis = 0)
 
 # Guardar info
+json_data = {
+    'partidos': partidos_info,
+    'diputados': diputados_info
+}
 with open('../www/public/data/diputados.laealtad.json', 'w') as outfile:
-    json.dump(diputados_info, outfile)
+    json.dump(json_data, outfile)
 
 diputados_info_df.to_csv('./data/resumen.lealtad.csv', index = False, encoding='utf-8-sig')

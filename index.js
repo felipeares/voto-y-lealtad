@@ -9,19 +9,16 @@ app.get('/', function (req, res) {
 app.get('/error', function (req, res) {
 	res.sendFile(path.join(__dirname+'/www/error.html'));
 });
-app.get('/dist', function (req, res) {
-	res.sendFile(path.join(__dirname+'/www/dist/index.html'));
-});
 app.get('/test', function (req, res) {
 	res.sendFile(path.join(__dirname+'/www/tests/index.html'));
 });
 
 app.get('/visualizations/:visName', function (req, res) {
-	if (fs.existsSync(__dirname+'/visualizations/'+req.params.visName+'.html')) {
-	    res.sendFile(path.join(__dirname+'/visualizations/'+req.params.visName+'.html'));
+	if (fs.existsSync(__dirname+'/www/'+req.params.visName+'.html')) {
+	    res.sendFile(path.join(__dirname+'/www/'+req.params.visName+'.html'));
 	}
 	else {
-		res.sendFile(path.join(__dirname+'/visualizations/index.html'));
+		res.sendFile(path.join(__dirname+'/www/index.html'));
 	}
 	
 });

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="felipeares">
+		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+		<title>Lealtad01</title>		
+		<style>
+
+		body {
+			text-align:center;
+			background-color: #ffffff;
+			background-image: url("https://www.transparenttextures.com/patterns/clean-textile.png");
+			font: 8px Verdana, Helvetica, Arial, sans-serif;
+		}
+		
+		.links line {
+		  stroke: #999;
+		  stroke-opacity: 0.6;
+		}
+
+		.nodes circle {
+		  stroke: #fff;
+		  stroke-width: 1.5px;
+		}
+		
+		textPath.nombrespartidos {
+			font: 8px Verdana, Helvetica, Arial, sans-serif;
+			text-transform: uppercase;
+			/*font-weight: bold;*/
+		}
+		
+		image.diputado {
+			border: solid 2px #FFF;
+			border-radius: 20px;
+		}
+		
+		
+      	#tooltip {
+	        position: absolute;
+	        width: 300px;
+	        height: auto;
+	        padding: 10px;
+	        background-color: white;
+	        -webkit-border-radius: 10px;
+	        -moz-border-radius: 10px;
+	        border-radius: 10px;
+	        -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	        -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	        pointer-events: none;
+      	}
+
+      	#tooltip.hidden {
+        	display: none;
+      	}
+		
+		#tooltip-left {
+			float:left;
+			width:100px;
+		}
+		
+		#tooltip-right {
+			float:right;
+			width:184px;
+		}
+		
+		#tooltip-image {
+			width: 100%;
+		}
+		
+		#tooltip-right {
+			padding: 5px;
+		}
+		
+		#tooltip-nombre {
+			font-size: 16px;
+			text-align: left;
+			margin: 0px;
+		}
+		
+		#tooltip-partido {
+			font-size:12px;
+			color: #CCC;
+			text-align: left;
+			margin: 8px 0px;
+			font-weight: 100;
+		}
+		
+		#value {
+			margin: 0;
+			text-align: left;
+			font-size: 12px;
+			color: #333;
+		}
+
+		</style>
+	</head>
+	<body>
+		<div id="tooltip" class="hidden">
+			<div id="tooltip-left">
+				<img id="tooltip-image" src="">
+			</div>
+			<div id="tooltip-right">
+				<h4 id="tooltip-nombre"></h4>
+				<h5 id="tooltip-partido"></h5>
+				<p id="value"></p>
+			</div>
+		</div>
+		<svg id="graph" width="650" height="650">
+		</svg>
+			
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<script>
+			var svg = d3.select("svg"),
+				width = +svg.attr("width"),
+				height = +svg.attr("height"),
+				radiofuera = 32*width/64,
+				radionivelbajo = 27*width/64,
+				radionivelmedio = 20*width/64,
+				radionivelalto = 13*width/64,
+				radiocircentro = 6*width/64,
+				posiciontextopart = radionivelbajo + (radiofuera-radionivelbajo)/3,
+				radiodiputado = 12,
+				partidos = [],
+				partidosplacing = [],
+				coloresfranjas = ["#CCC", "#DDD", "#EEE"];
+				//coloresfranjas = ["#FBC67D", "#FBF48A", "#ACD68B"];
+				
+			
+			d3.json("../public/data/diputados.laealtad.json", function(error, graph) {
+				if (error) throw error;
+				
+				partidos = graph.partidos;
+				for (var i=0; i<partidos.length; i++) {
+					partidosplacing[i] = 1;
+				}
+				
+				var nivelpartidos = svg.append("g")
+					.append("circle")
+					.attr("r", radiofuera)
+					.attr("cx", width/2)
+					.attr("cy", height/2)
+					.attr("fill", "#3F607D")
+					.attr("stroke", "#FFF")
+					.attr("stroke-width", 1);
+				
+				var nivelbajo = svg.append("g")
+					.append("circle")
+					.attr("r", radionivelbajo)
+					.attr("cx", width/2)
+					.attr("cy", height/2)
+					.attr("fill", coloresfranjas[0])
+					.attr("stroke", "#FFF")
+					.attr("stroke-width", 2);
+				
+				var nivelmedio = svg.append("g")
+					.append("circle")
+					.attr("r", radionivelmedio)
+					.attr("cx", width/2)
+					.attr("cy", height/2)
+					.attr("fill", coloresfranjas[1]);
+				
+				var nivealto = svg.append("g")
+					.append("circle")
+					.attr("r", radionivelalto)
+					.attr("cx", width/2)
+					.attr("cy", height/2)
+					.attr("fill", coloresfranjas[2]);
+				
+				var ciculocentro = svg.append("g")
+					.append("circle")
+					.attr("r", radiocircentro)
+					.attr("cx", width/2)
+					.attr("cy", height/2)
+					.attr("fill", "#FFF");
+				
+				var link = svg.append("g")
+					.append("line")
+					.attr("x1", width/2)
+					.attr("y1", height/2)
+					.attr("x2", width/2)
+					.attr("y2", 0 + radiocircentro)
+					.attr("stroke-width", 1)
+					.attr("stroke", "#000")
+					.attr("transform","translate(0," + -1*radiocircentro + ")");
+				
+				var separadores = svg.append("g")
+		      		.selectAll(".separadores")
+		      		.data(partidos)
+					.enter()
+					.append("line")
+					.attr("x1", width/2)
+					.attr("y1", height/2)
+					.attr("x2", width/2)
+					.attr("y2", 0 + radiocircentro)
+					.attr("stroke-width", 5)
+					.attr("stroke", "#fff")
+					.attr("transform",function(d,i) { return "rotate(" + 360*i/8 + ", " + width/2 + "," + height/2 + ") translate(0," + -1*radiocircentro + ")"; });
+				
+				var michelle = svg.append("g")
+					.append("svg:image")
+					.attr("xlink:href",  "../michelle.jpg")
+					.attr("height", radiocircentro*1.2)
+			        .attr("width", radiocircentro*1.2)
+					.attr("x", width/2 - 1.2*radiocircentro/2)
+			        .attr("y", height/2 - 1.2*radiocircentro/2);
+				
+				var textpath = svg.append("path")
+					.attr("id", "textpath")
+					.attr("d", "M " + width/2 + ", " + height/2 + " m -" + posiciontextopart + ", 0 a " + posiciontextopart + "," + posiciontextopart + " 0 1,1 " + 2*posiciontextopart + ",0 a " + posiciontextopart + "," + posiciontextopart + " 0 1,1 -" + 2*posiciontextopart + ",0")
+					.style("fill", "none");
+				var nombrespartidos = svg.append("text")
+		      		.selectAll(".nombrespartidoscirc")
+		      		.data(partidos)
+					.enter()
+				   	.append("textPath")
+					.attr("xlink:href", "#textpath") 
+					.style("text-anchor","middle") 
+					.style("fill","#FFF") 
+					.attr("startOffset", function(d,i) {return (100/8)/2 + 100*i/8 + "%"; })		
+					.text(function (d,i) { return d; })
+					.attr("class","nombrespartidos");
+				
+				
+				var diputados = svg.append("g")
+					.selectAll("diputados")
+					.data(graph.diputados)
+					.enter().append("g")
+					.attr("class", "diputados")
+					.attr("transform",function(d,i) { 
+						var partidoindex = partidos.indexOf(d.comite_parlamentario);
+						var lealtad = Math.max(0, (d.lealtad - 0.3)/0.7)
+						var mov = partidosplacing[partidoindex]*(Math.random(0,1))*(360/8)/4;
+						var rotate = "rotate(" + ((360/8)/2 - 90 + mov + 360*partidoindex/8) + ", " + width/2 + "," + height/2 + ")";
+						var translate = "translate(0,-" + (radiocircentro + (1-lealtad)*(radionivelbajo - radiocircentro)) + ")"
+						partidosplacing[partidoindex] = partidosplacing[partidoindex]*-1
+						return rotate + " " + translate; 
+					})
+					.on("mouseover", function(d) {
+						var selection = d3.select("#tooltip")
+							.style("left", (d3.event.pageX) + "px")
+							.style("top", (d3.event.pageY) + "px")
+							.style("background-color", "#FFF")
+							.classed("hidden", false);						
+					  
+						selection.select("#tooltip-image")
+							.attr("src", "https://www.camara.cl/img.aspx?prmid=g" + d.prmid);
+											  
+						selection.select("#tooltip-nombre")
+							.html(d.nombre)
+						
+						selection.select("#tooltip-partido")
+							.html(d.comite_parlamentario)
+						
+						selection.select("#value")
+							.html("Votos a Favor: " + d.favor + "<br>" + "Votos en Contra: " + d.contra + "<br>" + "Abstenciones: " + d.abstencion + "<br>" + "Inasistencias: " + d.ausencia);	
+					})
+	  			  	.on("mouseout", function(d){
+						d3.select("#tooltip").classed("hidden", true);
+					});
+				 
+				 
+				diputados.append("circle")
+					.attr("class", "diputado-circulo")
+					.attr("r", radiodiputado)
+					.attr("stroke", "#FFF")
+					.attr("fill", "#53A0B8")
+					.attr("cx", width/2 - radiodiputado/2)
+					.attr("cy", height/2 + radiodiputado/2)
+				
+				diputados.append("svg:image")
+					.attr("class", "diputado-imagen")
+					.attr("xlink:href",  function(d) { return "https://www.camara.cl/img.aspx?prmid=chs" + d.prmid; })
+					.attr("height", radiodiputado)
+			        .attr("width", radiodiputado)
+					.attr("x", width/2 - 10)
+			        .attr("y", height/2);
+				
+				
+				
+				
+				
+				
+					
+				
+				console.log(graph)
+			});
+		
+
+		</script>
+	</body>
+</html>

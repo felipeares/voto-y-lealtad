@@ -243,8 +243,8 @@ function cambiarTipo(n) {
 	}, {
 		duration: 500,
 		complete: function() {
-			$('#expl-container h1').text(btn.title);
-			$('#expl-container p').text(btn.body);	
+			$('#expl-container h1').html(btn.title);
+			$('#expl-container p').html(btn.body);	
 			$('#buttons-container a.nav-link').removeClass('active');
 			ths.addClass('active');					
 		}
@@ -256,28 +256,28 @@ var contents = [
 		n: 1,
 		button: "General",
 		title: "Índice de cercanía legislativa - Todos",
-		body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
+		body: "El índice de cercanía toma en cuenta todas las votaciones de proyectos presentados por el ejecutivo (Llamado mensajes). Se calcula para cada diputado dividiendo el total de votos a favor en estos proyectos por el número total de mensajes presentados. El índice va del 0 al 1, siendo 1 el más cercano al ejecutivo (círculo interior).",
 		action: mostrarLealtadSinAsistencia
 	},
 	{
 		n: 2,
 		button: "Sólo Asistentes",
 		title: "Tomando en cuenta sólo las sesiones en la que asistieron",
-		body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
+		body: "El índice de sólo asistentes se calcula igual que el índice anterior pero esta vez tomando en cuenta sólo las votaciones en donde estaba presente cada diputado. El índice va del 0 al 1, siendo 1 el más cercano al ejecutivo (círculo interior).<br><br>",
 		action: mostrarLealtadConAsistencia
 	},
 	{
 		n: 3,
 		button: "Primer Trámite",
 		title: "Tomando en cuenta sólo Primer Trámite - Primer Informe",
-		body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
+		body: "Este índice se calcula filtrando sólo los mensaje tipificados como Primer Trámite - Primer Informe para dar cuenta el recibimiento del proyecto por los distintos diputados y bloques. El índice va del 0 al 1, siendo 1 el más cercano al ejecutivo (círculo interior).<br><br>",
 		action: mostrarLealtadPrimerTramite
 	},
 	{
 		n: 4,
 		button: "Rechazados",
 		title: "Tomando en cuenta sólo los proyectos finalmente rechazados",
-		body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
+		body: "Como lo dice el título, este índice se calcula tomando en cuenta sólo los proyectos finalmente rechazados. El índice va del 0 al 1, siendo 1 el más cercano al ejecutivo (círculo interior).<br><br>",
 		action: mostrarLealtadSoloReprobados
 	}
 ];
@@ -286,8 +286,8 @@ for (var i = 0; i < contents.length; i++) {
 	btn = contents[i];
 	$('#buttons-container').append('<li class="nav-item"><a id="btn_' + btn.n + '" data-n="' + btn.n + '" class="nav-link ' + (i==0 ? 'active' : '') + '" href="javascript:">' + btn.button + '</a></li>');
 }
-$('#expl-container h1').text(contents[0].title);
-$('#expl-container p').text(contents[0].body);
+$('#expl-container h1').html(contents[0].title);
+$('#expl-container p').html(contents[0].body);
 
 var automatico = setInterval(cambiarAuto, 5000);
 var counter = 1;
